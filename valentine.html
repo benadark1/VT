@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #ffe6e6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #ff3366;
+        }
+        .gif-container {
+            margin: 20px 0;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #ff3366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #ff6699;
+        }
+        .hidden {
+            display: none;
+        }
+        .image-upload {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Will You Be My Valentine? ❤️</h1>
+        <div class="gif-container">
+            <img src="https://media.giphy.com/media/3oz8xIsloV7zOmt81G/giphy.gif" alt="Cute Love Gif" width="100%">
+        </div>
+        <p>You make my heart skip a beat every day! 💕</p>
+        <div class="buttons">
+            <button onclick="showResponse('yes')">Yes! 💖</button>
+            <button id="no-button" onclick="showResponse('no')">No 😢</button>
+        </div>
+        <div id="response" class="hidden">
+            <p id="response-text"></p>
+            <div id="extra-gif" class="gif-container hidden">
+                <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" alt="Happy Gif" width="100%">
+            </div>
+        </div>
+        <div class="image-upload">
+            <p>Add Our Picture:</p>
+            <input type="file" accept="image/*" id="upload" onchange="previewImage()">
+            <div id="preview-container" class="hidden">
+                <img id="preview" src="" alt="Your Image" width="100%">
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showResponse(answer) {
+            var responseDiv = document.getElementById("response");
+            var responseText = document.getElementById("response-text");
+            var extraGif = document.getElementById("extra-gif");
+            var noButton = document.getElementById("no-button");
+            
+            if (answer === "yes") {
+                responseText.innerHTML = "Yay! You made me the happiest person ever! 💘";
+                extraGif.classList.remove("hidden");
+            } else {
+                responseText.innerHTML = "Oh no... but I still love you! 💔";
+                extraGif.classList.add("hidden");
+                noButton.style.display = "none";
+            }
+            responseDiv.classList.remove("hidden");
+        }
+        
+        function previewImage() {
+            var file = document.getElementById("upload").files[0];
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                document.getElementById("preview").src = reader.result;
+                document.getElementById("preview-container").classList.remove("hidden");
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
