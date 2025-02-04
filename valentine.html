@@ -47,7 +47,16 @@
         .image-upload {
             margin-top: 15px;
         }
+        .confetti {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.2"></script>
 </head>
 <body>
     <div class="container">
@@ -58,21 +67,18 @@
         <p>You make my heart skip a beat every day! 💕</p>
         <div class="buttons">
             <button onclick="showResponse('yes')">Yes! 💖</button>
-            <button id="no-button" onclick="showResponse('no')">No 😢</button>
+            <button id="no-button" onclick="shrinkNoButton()">No 😢</button>
         </div>
         <div id="response" class="hidden">
             <p id="response-text"></p>
             <div id="extra-gif" class="gif-container hidden">
                 <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" alt="Happy Gif" width="100%">
             </div>
-        </div>
-        <div class="image-upload">
-            <p>Add Our Picture:</p>
-            <input type="file" accept="image/*" id="upload" onchange="previewImage()">
-            <div id="preview-container" class="hidden">
-                <img id="preview" src="" alt="Your Image" width="100%">
+            <div id="selected-image" class="hidden">
+                <img src="your_preselected_image.jpg" alt="Special Image" width="100%">
             </div>
         </div>
+        <canvas class="confetti" id="confetti-canvas"></canvas>
     </div>
     
     <script>
@@ -80,29 +86,42 @@
             var responseDiv = document.getElementById("response");
             var responseText = document.getElementById("response-text");
             var extraGif = document.getElementById("extra-gif");
-            var noButton = document.getElementById("no-button");
+            var selectedImage = document.getElementById("selected-image");
             
             if (answer === "yes") {
                 responseText.innerHTML = "Yay! You made me the happiest person ever! 💘";
                 extraGif.classList.remove("hidden");
-            } else {
-                responseText.innerHTML = "Oh no... but I still love you! 💔";
-                extraGif.classList.add("hidden");
-                noButton.style.display = "none";
+                selectedImage.classList.remove("hidden");
+                launchConfetti();
             }
             responseDiv.classList.remove("hidden");
         }
         
-        function previewImage() {
-            var file = document.getElementById("upload").files[0];
-            var reader = new FileReader();
-            reader.onloadend = function() {
-                document.getElementById("preview").src = reader.result;
-                document.getElementById("preview-container").classList.remove("hidden");
+        function shrinkNoButton() {
+            var noButton = document.getElementById("no-button");
+            var currentSize = window.getComputedStyle(noButton).getPropertyValue("font-size");
+            var newSize = parseFloat(currentSize) * 0.8;
+            if (newSize < 5) {
+                noButton.style.display = "none";
+            } else {
+                noButton.style.fontSize = newSize + "px";
+                noButton.style.padding = (newSize / 3) + "px " + (newSize / 2) + "px";
             }
-            if (file) {
-                reader.readAsDataURL(file);
-            }
+        }
+        
+        function launchConfetti() {
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
         }
     </script>
 </body>
